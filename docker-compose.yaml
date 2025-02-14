@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .  # Ensure the build context is the current directory
+      dockerfile: Dockerfile  # Specify the Dockerfile explicitly
+    ports:
+      - "8082:8080"  # Map host port 8081 to container port 8080
+    restart: always

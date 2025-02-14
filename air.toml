@@ -1,0 +1,5 @@
+[build]
+cmd = "true"  # Skip the build step
+bin = "./sample-health"  # Use the pre-built binary
+include_ext = ["go", "toml", "yaml"]
+exclude_dir = ["tmp", "vendor"]
