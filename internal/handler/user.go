@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"sample-health/internal/dto"
 	"sample-health/internal/model"
 	"sample-health/internal/service"
 	"strconv"
@@ -19,33 +20,37 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		response := dto.ErrorResponse(http.StatusBadRequest, "Invalid request payload")
+		dto.WriteJSON(w, http.StatusBadRequest, response, nil)
 		return
 	}
 
 	if err := h.userService.CreateUser(&user); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		response := dto.ErrorResponse(http.StatusInternalServerError, "Failed to create user")
+		dto.WriteJSON(w, http.StatusInternalServerError, response, nil)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(user)
+	response := dto.SuccessResponse(http.StatusCreated, "User created successfully", user, nil)
+	dto.WriteJSON(w, http.StatusCreated, response, nil)
 }
 
 func (h *UserHandler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Query().Get("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		response := dto.ErrorResponse(http.StatusBadRequest, "Invalid request payload")
+		dto.WriteJSON(w, http.StatusBadRequest, response, nil)
 		return
 	}
 
 	user, err := h.userService.GetUserByID(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		response := dto.ErrorResponse(http.StatusBadRequest, "Invalid request ID")
+		dto.WriteJSON(w, http.StatusBadRequest, response, nil)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(user)
+	response := dto.SuccessResponse(http.StatusOK, "User Data.", user, nil)
+	dto.WriteJSON(w, http.StatusOK, response, nil)
 }

@@ -14,16 +14,20 @@ type Config struct {
 	DBHost     string
 	DBPort     string
 	DBName     string
-	ServerPort string
 }
 
 // LoadConfig loads the configuration from environment variables
 func LoadConfig() *Config {
 	// Load .env file (optional, for local development)
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, relying on environment variables")
-	}
+	//if err := godotenv.Load(); err != nil {
+	//	log.Println("No .env file found, relying on environment variables")
+	//}
 
+	if err := godotenv.Load(); err != nil {
+		log.Printf("Error loading .env file: %v\n", err)
+	} else {
+		log.Println(".env file loaded successfully")
+	}
 	return &Config{
 		DBUser:     getEnv("DB_USER", "root"),
 		DBPassword: getEnv("DB_PASSWORD", "root"),
