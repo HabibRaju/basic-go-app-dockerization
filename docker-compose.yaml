@@ -1,5 +1,12 @@
 version: "3.8"
 
+name: go-basic-app
+
+networks:
+  common-net:
+    external: true
+  commonservices_common:
+    external: true
 services:
   app:
     build:
@@ -7,4 +14,11 @@ services:
       dockerfile: Dockerfile  # Specify the Dockerfile explicitly
     ports:
       - "8082:8080"  # Map host port 8081 to container port 8080
+    networks:
+      common-net:
+        aliases:
+          - sample-health
+      commonservices_common:
+        aliases:
+          - sample-health
     restart: always
